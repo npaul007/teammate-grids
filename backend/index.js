@@ -12,7 +12,7 @@ const { PORT } = require("./modules/constants");
 app.use(bodyParser.json());
 app.use(cors());
 
-require("./controller/adminController").bind(app);
+require("./controller").bind(app);
 
 app.listen(PORT, () => {
   try {

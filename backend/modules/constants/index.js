@@ -1,5 +1,4 @@
 const SECRET_KEY = process.env.SECRET_KEY;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const PORT = process.env.PORT || 4000;
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -12,7 +11,6 @@ const DATABASE_SSL = process.env.DATABASE_SSL;
 
 module.exports = {
   SECRET_KEY,
-  ADMIN_PASSWORD,
   PORT,
   ONE_DAY,
   DATABASE_NAME,
