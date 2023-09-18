@@ -7,7 +7,6 @@ interface LoginFormProps {
   onLogin: (email: string, password: string) => void;
 }
 
-// Create screen components
 export const Login = ({ navigation }: { navigation: any }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
