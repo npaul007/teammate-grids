@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Text, View, Pressable, TextInput } from "react-native";
-import { styles } from "../modules/constants";
+import { Screens, styles } from "../modules/constants";
 import { Icon } from "react-native-elements";
 
 interface LoginFormProps {
@@ -42,7 +42,12 @@ export const Login = ({ navigation }: { navigation: any }) => {
       <Pressable onPress={handleLogin} style={styles.button}>
         <Text style={styles.button.text}>Login</Text>
       </Pressable>
-      <Text>{"\n"}Don't have an account? Register here!</Text>
+      <Text>
+        {"\n"}Don't have an account?{" "}
+        <Pressable onPress={() => navigation.navigate(Screens.REGISTER)}>
+          <Text style={styles.url}>Register here!</Text>
+        </Pressable>
+      </Text>
     </View>
   );
 };

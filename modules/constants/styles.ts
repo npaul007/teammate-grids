@@ -43,4 +43,8 @@ export const styles = StyleSheet.create({
   h2: {
     fontSize: 18,
   },
+  url: {
+    fontWeight: "bold",
+    color: "blue",
+  },
 });
