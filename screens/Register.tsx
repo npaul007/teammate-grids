@@ -1,0 +1,14 @@
+import { Text, View, Button } from "react-native";
+
+// Create screen components
+export const Register = ({ navigation }: { navigation: any }) => {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Register Screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation?.navigate("Details")}
+      />
+    </View>
+  );
+};
