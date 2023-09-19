@@ -46,9 +46,38 @@ export const styles = StyleSheet.create({
   url: {
     fontWeight: "bold",
     color: "blue",
+    position: "relative",
+    top: 3,
   },
   errorText: {
     color: "red",
     fontWeight: "bold",
+  },
+});
+
+export const gameStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  cell: {
+    width: "25%",
+    height: "25%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+  },
+  cellText: {
+    fontSize: 16,
   },
 });

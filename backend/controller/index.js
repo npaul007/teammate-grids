@@ -51,11 +51,11 @@ const verifyCallback = (req, res, _callback) => {
     if (Date.now() - time < ONE_DAY) {
       _callback();
     } else {
-      return res.status(401).send("Token expired");
+      return res.status(200).send({ message: "Token expired", expired: true });
     }
   } catch (err) {
     console.log("Encountered error", err);
-    res.status(401).send(err);
+    res.status(500).send({ message: err });
   }
 };
 
