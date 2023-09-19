@@ -54,7 +54,7 @@ const getQueryResult = (query) => {
 
 const createTables = () => {
   executeQuery(
-    "CREATE TABLE IF NOT EXISTS `users` (	`id` INT(255) NOT NULL, `email` VARCHAR(255) NOT NULL,	`password` VARCHAR(255) NOT NULL, `created_at` DATETIME(6) NOT NULL, 	PRIMARY KEY (`id`));",
+    "CREATE TABLE IF NOT EXISTS `users` (	`id` VARCHAR(255) NOT NULL, `email` VARCHAR(255) NOT NULL,	`password` VARCHAR(255) NOT NULL, `created_at` DATETIME(6) NOT NULL, 	PRIMARY KEY (`id`));",
     queryCallback
   );
 };

@@ -26,6 +26,7 @@ export const Login = ({ navigation }: { navigation: any }) => {
           onChangeText={setEmail}
           value={email}
           style={styles.input}
+          autoCapitalize="none"
         />
       </View>
       <View style={styles.inputContainer}>
@@ -36,6 +37,7 @@ export const Login = ({ navigation }: { navigation: any }) => {
           value={password}
           secureTextEntry
           style={styles.input}
+          autoCapitalize="none"
         />
       </View>
       <Pressable onPress={handleLogin} style={styles.button}>

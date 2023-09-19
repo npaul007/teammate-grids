@@ -1,12 +1,9 @@
-const generateRandomID = (length) => {
-  let randomID = "";
+const generateRandomID = () => {
+  // Generate a random 16-character hexadecimal string.
+  const randomId = Math.random().toString(16).substring(2);
 
-  for (let i = 0; i < length; i++) {
-    const randomNumber = Math.floor(Math.random() * 10);
-    randomID += randomNumber;
-  }
-
-  return randomID;
+  // Return the random ID.
+  return randomId;
 };
 
 const getCurDate = () => {

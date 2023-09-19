@@ -8,13 +8,13 @@ const loginRoute = async (req, res) => {
   const result = await getQueryResult(
     `SELECT id, password FROM users WHERE email = "${req.body.email}"`
   );
-  if (!result[0]) return res.send(null);
+  if (!result[0]) return res.send({ message: "invalid email/password" });
 
   const validPass = await bcrypt.compare(req.body.password, result[0].password);
-  if (!validPass) return res.send(null);
+  if (!validPass) return res.send({ message: "invalid email/password" });
 
   const token = jwt.sign({ id: result[0].id, time: Date.now() }, SECRET_KEY);
-  res.header("auth-token", token).send(token);
+  res.header("auth-token", token).send({ token: token });
 };
 
 const registerRoute = async (req, res) => {
@@ -30,12 +30,13 @@ const registerRoute = async (req, res) => {
       .send({ message: "An account with this email already exists" });
   } else {
     const id = generateRandomID();
-    // await getQueryResult(`
-    //   INSERT INTO users (id, email, password, created_at)
-    //   VALUES (${id}, ${email}, "${password}", "${getCurDate()}")`);
+    console.log(id);
+    await getQueryResult(`
+      INSERT INTO users (id, email, password, created_at)
+      VALUES ("${id}", "${email}", "${password}", "${getCurDate()}")`);
 
-    const token = jwt.sign({ id: result[0].id, time: Date.now() }, SECRET_KEY);
-    res.header("auth-token", token).send(token);
+    const token = jwt.sign({ id: id, time: Date.now() }, SECRET_KEY);
+    res.header("auth-token", token).send({ token: token });
   }
 };
 
