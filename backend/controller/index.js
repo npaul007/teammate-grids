@@ -59,10 +59,24 @@ const verifyCallback = (req, res, _callback) => {
   }
 };
 
+const getPlayersRoute = (req, res) => {
+  verifyCallback(req, res, async () => {
+    const result = await getQueryResult(`SELECT * FROM players`);
+
+    if (result) {
+      res.send(result);
+    } else {
+      return res.send([]);
+    }
+  });
+};
+
 const bind = (app) => {
   app.post("/login", loginRoute);
 
   app.post("/register", registerRoute);
+
+  app.get("/players", getPlayersRoute);
 };
 
 module.exports = { bind };
