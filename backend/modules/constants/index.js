@@ -8,6 +8,9 @@ const DATABASE_PORT = process.env.DATABASE_PORT;
 const DATABASE_USER = process.env.DATABASE_USER;
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
 const DATABASE_SSL = process.env.DATABASE_SSL;
+const NHL_API_HOST = process.env.NHL_API_HOST;
+
+const SEASONS = ["20202021", "20212022", "20222023"];
 
 module.exports = {
   SECRET_KEY,
@@ -19,4 +22,6 @@ module.exports = {
   DATABASE_USER,
   DATABASE_PASSWORD,
   DATABASE_SSL,
+  NHL_API_HOST,
+  SEASONS,
 };
