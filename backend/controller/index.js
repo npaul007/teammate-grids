@@ -30,10 +30,11 @@ const registerRoute = async (req, res) => {
       .send({ message: "An account with this email already exists" });
   } else {
     const id = generateRandomID();
-    console.log(id);
+    const passToSave = await bcrypt.hashSync(password, 10);
+
     await getQueryResult(`
       INSERT INTO users (id, email, password, created_at)
-      VALUES ("${id}", "${email}", "${password}", "${getCurDate()}")`);
+      VALUES ("${id}", "${email}", "${passToSave}", "${getCurDate()}")`);
 
     const token = jwt.sign({ id: id, time: Date.now() }, SECRET_KEY);
     res.header("auth-token", token).send({ token: token });

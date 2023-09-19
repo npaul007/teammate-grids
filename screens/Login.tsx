@@ -1,24 +1,46 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Text, View, Pressable, TextInput } from "react-native";
 import { Screens, styles } from "../modules/constants";
 import { Icon } from "react-native-elements";
-
-interface LoginFormProps {
-  onLogin: (email: string, password: string) => void;
-}
+import { Exist } from "../components";
+import { login } from "../modules/api";
+import { setAuthCookie } from "../modules/utils";
+import { eq } from "lodash";
 
 export const Login = ({ navigation }: { navigation: any }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    //   onLogin(email, password);
-  };
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleLogin = useCallback(() => {
+    if (!email.length || !password.length) {
+      setErrorMessage("Please fill all fields");
+    } else {
+      login(email, password, (data) => {
+        if (!eq(data, null)) {
+          if (data?.message) {
+            setErrorMessage(`${data?.message}`);
+          } else if (data?.token) {
+            setAuthCookie(data?.token);
+            setErrorMessage("");
+          }
+        }
+        console.log("data--", data);
+      });
+    }
+  }, [email, password]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.h1}>Welcome to TEAMMATE GRIDS!</Text>
       <Text style={styles.h2}>Login to Play! {"\n"}</Text>
+      <Exist when={!!errorMessage.length}>
+        <Text style={styles.errorText}>
+          {errorMessage}
+          {"\n"}
+        </Text>
+      </Exist>
       <View style={styles.inputContainer}>
         <Icon name="email" size={24} color="gray" style={styles.icon} />
         <TextInput

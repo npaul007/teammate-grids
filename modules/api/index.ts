@@ -10,9 +10,13 @@ const getAuthHeaders = async () => {
   };
 };
 
-export const login = async (email: string, password: string) => {
-  try {
-    const response = await axios.post(
+export const login = async (
+  email: string,
+  password: string,
+  callback: (data: any) => void
+) => {
+  axios
+    .post(
       `${API_HOST}login`,
       { email, password },
       {
@@ -20,18 +24,15 @@ export const login = async (email: string, password: string) => {
           "Content-Type": "application/json",
         },
       }
-    );
-
-    const { data } = response;
-
-    return data;
-  } catch (err: unknown) {
-    if (err instanceof AxiosError) {
-      console.log("Failed to make request due to error:", err.message);
-    }
-  }
-
-  return null;
+    )
+    .then((response) => {
+      const { data } = response;
+      callback(data);
+    })
+    .catch((error) => {
+      console.log("Failed to make request due to error:", error);
+      callback(null);
+    });
 };
 
 export const register = (

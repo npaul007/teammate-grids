@@ -14,7 +14,7 @@ export const Register = ({ navigation }: { navigation: any }) => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleLogin = useCallback(() => {
+  const handleRegister = useCallback(() => {
     if (!email.length || !password.length || !confirmPassword.length) {
       setErrorMessage("Please fill all fields");
     } else {
@@ -27,6 +27,7 @@ export const Register = ({ navigation }: { navigation: any }) => {
               setErrorMessage(`${data?.message}`);
             } else if (data?.token) {
               setAuthCookie(data?.token);
+              setErrorMessage("");
             }
           }
         });
@@ -75,7 +76,7 @@ export const Register = ({ navigation }: { navigation: any }) => {
           autoCapitalize="none"
         />
       </View>
-      <Pressable onPress={handleLogin} style={styles.button}>
+      <Pressable onPress={handleRegister} style={styles.button}>
         <Text style={styles.button.text}>Submit</Text>
       </Pressable>
       <Text>
