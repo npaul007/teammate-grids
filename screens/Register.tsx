@@ -7,12 +7,20 @@ import { register } from "../modules/api";
 import { eq } from "lodash";
 import { setAuthCookie } from "../modules/utils";
 
-export const Register = ({ navigation }: { navigation: any }) => {
+export const Register = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  const { setIsSignedIn } = route.params;
 
   const handleRegister = useCallback(() => {
     if (!email.length || !password.length || !confirmPassword.length) {
@@ -28,12 +36,13 @@ export const Register = ({ navigation }: { navigation: any }) => {
             } else if (data?.token) {
               setAuthCookie(data?.token);
               setErrorMessage("");
+              setIsSignedIn(true);
             }
           }
         });
       }
     }
-  }, [email, password, confirmPassword]);
+  }, [email, password, confirmPassword, setIsSignedIn]);
 
   return (
     <View style={styles.container}>

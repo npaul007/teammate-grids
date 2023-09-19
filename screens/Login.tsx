@@ -7,11 +7,19 @@ import { login } from "../modules/api";
 import { setAuthCookie } from "../modules/utils";
 import { eq } from "lodash";
 
-export const Login = ({ navigation }: { navigation: any }) => {
+export const Login = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  const { setIsSignedIn } = route.params;
 
   const handleLogin = useCallback(() => {
     if (!email.length || !password.length) {
@@ -24,12 +32,12 @@ export const Login = ({ navigation }: { navigation: any }) => {
           } else if (data?.token) {
             setAuthCookie(data?.token);
             setErrorMessage("");
+            setIsSignedIn(true);
           }
         }
-        console.log("data--", data);
       });
     }
-  }, [email, password]);
+  }, [email, password, setIsSignedIn]);
 
   return (
     <View style={styles.container}>
