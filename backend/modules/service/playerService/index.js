@@ -1,6 +1,10 @@
 const axios = require("axios");
 const fs = require("fs");
+const { get } = require("lodash");
 const { NHL_API_HOST, SEASONS } = require("../../constants");
+const { getQueryResult } = require("../../../database");
+
+const writePath = __dirname.replace("modules/service/playerService", "static/");
 
 const fetchJson = async (season) => {
   try {
@@ -22,10 +26,6 @@ const fetchJson = async (season) => {
 
 const saveJsons = async () => {
   try {
-    const writePath = __dirname.replace(
-      "modules/service/playerService",
-      "static/"
-    );
     SEASONS.forEach(async (season) => {
       const response = await fetchJson(season);
       const { data } = response;
@@ -39,8 +39,63 @@ const saveJsons = async () => {
   }
 };
 
+const formatPlayerData = (json, data, season) => {
+  const teams = get(json, "teams", []);
+  teams.forEach((team) => {
+    const roster = get(team, "roster.roster", []);
+
+    roster.forEach((player) => {
+      if (!data[player?.person?.id]) {
+        const fullName = player?.person?.fullName ?? "";
+        const nameArr = fullName.split(" ");
+
+        data[player?.person?.id] = {
+          id: player?.person?.id,
+          first_name: nameArr[0],
+          last_name: nameArr[1],
+          teams_played: {
+            [team?.id]: {
+              team_id: team?.id,
+              season: season,
+            },
+          },
+        };
+      } else {
+        data[player?.person?.id].teams_played[team?.id] = {
+          team_id: team?.id,
+          season: season,
+        };
+      }
+    });
+  });
+};
+
+const savePlayerDataToDB = async () => {
+  const result = await getQueryResult(`SELECT COUNT(*) as count FROM players`);
+
+  if (result[0] && !result[0].count) {
+    const players = {};
+
+    SEASONS.forEach(async (season, idx) => {
+      const fileName = `${writePath}team_${season}.json`;
+      if (fs.existsSync(fileName)) {
+        const data = await fs.readFileSync(fileName);
+        const json = JSON.parse(data.toString());
+        formatPlayerData(json, players, season);
+      }
+
+      if (idx === SEASONS.length - 1) {
+        if (players && !fs.existsSync(`${writePath}/test`)) {
+          fs.writeFileSync(`${writePath}/test`, JSON.stringify(players));
+        }
+      }
+    });
+  }
+};
+
 const runPlayerService = () => {
   saveJsons();
+  savePlayerDataToDB();
 };
 
 module.exports = {

@@ -18,8 +18,9 @@ require("./controller").bind(app);
 app.listen(PORT, () => {
   try {
     console.log(`Server started on port ${PORT}`);
-    runPlayerService();
-    initDatabaseConnection();
+    initDatabaseConnection(() => {
+      runPlayerService();
+    });
   } catch (err) {
     console.log("Server encountered error: ", err);
   }

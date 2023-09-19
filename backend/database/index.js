@@ -57,9 +57,14 @@ const createTables = () => {
     "CREATE TABLE IF NOT EXISTS `users` (	`id` VARCHAR(255) NOT NULL, `email` VARCHAR(255) NOT NULL,	`password` VARCHAR(255) NOT NULL, `created_at` DATETIME(6) NOT NULL, 	PRIMARY KEY (`id`));",
     queryCallback
   );
+
+  executeQuery(
+    "CREATE TABLE IF NOT EXISTS `players` (	`id` VARCHAR(255) NOT NULL, `first_name` VARCHAR(255) NOT NULL,	`last_name` VARCHAR(255) NOT NULL, `teams_played` LONGTEXT NOT NULL,	PRIMARY KEY (`id`));",
+    queryCallback
+  );
 };
 
-const initDatabaseConnection = () => {
+const initDatabaseConnection = (_callback = null) => {
   con.connect(function (err) {
     if (err) {
       console.log("Failed to connect to mySQL server due to error: ", err);
@@ -68,6 +73,8 @@ const initDatabaseConnection = () => {
     console.log("Connected to mySQL server!");
 
     createTables();
+
+    _callback && _callback();
   });
 };
 
