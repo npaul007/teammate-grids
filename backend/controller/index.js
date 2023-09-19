@@ -6,7 +6,7 @@ const { generateRandomID } = require("../modules/utils");
 
 const loginRoute = async (req, res) => {
   const result = await getQueryResult(
-    `SELECT id, password FROM users WHERE username = "${req.body.email}"`
+    `SELECT id, password FROM users WHERE email = "${req.body.email}"`
   );
   if (!result[0]) return res.send(null);
 
@@ -15,6 +15,28 @@ const loginRoute = async (req, res) => {
 
   const token = jwt.sign({ id: result[0].id, time: Date.now() }, SECRET_KEY);
   res.header("auth-token", token).send(token);
+};
+
+const registerRoute = async (req, res) => {
+  const { email, password } = req.body;
+
+  const search = await getQueryResult(
+    `SELECT * FROM users WHERE email = "${email}"`
+  );
+
+  if (search[0]) {
+    res
+      .status(400)
+      .send({ message: "An account with this email already exists" });
+  } else {
+    await getQueryResult(`
+      INSERT INTO users (id, email, password, created_at)
+      VALUES (${generateRandomID}, ${email}, "${password}", "${new Date()
+      .toJSON()
+      .slice(0, 19)
+      .replace("T", " ")}")`);
+    return res.status(200).send({});
+  }
 };
 
 const verifyCallback = (req, res, _callback) => {
@@ -36,7 +58,9 @@ const verifyCallback = (req, res, _callback) => {
 };
 
 const bind = (app) => {
-  app.post("/admin/login", loginRoute);
+  app.post("/login", loginRoute);
+
+  app.post("/register", registerRoute);
 };
 
 module.exports = { bind };
