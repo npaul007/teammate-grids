@@ -97,6 +97,12 @@ export const gameStyles = StyleSheet.create({
     fontSize: 16,
     color: "#fff",
   },
+  instructionsText: {
+    fontSize: 16,
+    color: "green",
+    textTransform: "uppercase",
+    fontWeight: "bold",
+  },
 });
 
 export const gamebarStyles = StyleSheet.create({
@@ -106,6 +112,41 @@ export const gamebarStyles = StyleSheet.create({
     gap: 15,
   },
   headerText: {
+    fontWeight: "bold",
+  },
+});
+
+export const modalStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  instructionsText: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

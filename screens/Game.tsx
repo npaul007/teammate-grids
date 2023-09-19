@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Pressable,
+} from "react-native";
+import { GameInstructionsModal } from "../components";
 import { gamebarStyles, gameStyles } from "../modules/constants";
 
 const playerPool = ["Player 1", "Player 2", "Player 3", "Player 4"];
@@ -25,30 +32,29 @@ const GameBar = () => {
   );
 };
 
+const FirstRow = () => {
+  return (
+    <View style={gameStyles.row}>
+      <View style={gameStyles.cellCorner}></View>
+      <View style={gameStyles.cellHeader}>
+        <Text style={gameStyles.cellHeaderText}>X0</Text>
+      </View>
+      <View style={gameStyles.cellHeader}>
+        <Text style={gameStyles.cellHeaderText}>X1</Text>
+      </View>
+    </View>
+  );
+};
+
 export const Game = () => {
-  const [selectedPlayers, setSelectedPlayers] = useState(Array(9).fill(null));
-
-  const handlePlayerSelection = (cellIndex: number, player: any) => {
-    setSelectedPlayers((prevSelectedPlayers) => {
-      const newSelectedPlayers = [...prevSelectedPlayers];
-      newSelectedPlayers[cellIndex] = player;
-      return newSelectedPlayers;
-    });
-  };
-
+  const [tutorialModalOpen, setTutorialModalOpen] = useState(false);
   return (
     <View style={gameStyles.container}>
       <GameBar />
+
       <Text style={gameStyles.header}>Sudoku Board</Text>
-      <View style={gameStyles.row}>
-        <View style={gameStyles.cellCorner}></View>
-        <View style={gameStyles.cellHeader}>
-          <Text style={gameStyles.cellHeaderText}>X0</Text>
-        </View>
-        <View style={gameStyles.cellHeader}>
-          <Text style={gameStyles.cellHeaderText}>X1</Text>
-        </View>
-      </View>
+
+      <FirstRow />
       <View style={gameStyles.row}>
         <View style={gameStyles.cellHeader}>
           <Text style={gameStyles.cellHeaderText}>Y0</Text>
@@ -87,6 +93,15 @@ export const Game = () => {
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
       </View>
+
+      <Pressable onPress={() => setTutorialModalOpen(true)}>
+        <Text style={gameStyles.instructionsText}>{"\n"}View Instructions</Text>
+      </Pressable>
+
+      <GameInstructionsModal
+        isVisible={tutorialModalOpen}
+        onClose={() => setTutorialModalOpen(false)}
+      />
     </View>
   );
 };
