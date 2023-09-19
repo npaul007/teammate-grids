@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { getQueryResult } = require("../database");
 const { SECRET_KEY, ONE_DAY } = require("../modules/constants");
-const { generateRandomID } = require("../modules/utils");
+const { generateRandomID, getCurDate } = require("../modules/utils");
 
 const loginRoute = async (req, res) => {
   const result = await getQueryResult(
@@ -26,16 +26,16 @@ const registerRoute = async (req, res) => {
 
   if (search[0]) {
     res
-      .status(400)
+      .status(200)
       .send({ message: "An account with this email already exists" });
   } else {
-    await getQueryResult(`
-      INSERT INTO users (id, email, password, created_at)
-      VALUES (${generateRandomID}, ${email}, "${password}", "${new Date()
-      .toJSON()
-      .slice(0, 19)
-      .replace("T", " ")}")`);
-    return res.status(200).send({});
+    const id = generateRandomID();
+    // await getQueryResult(`
+    //   INSERT INTO users (id, email, password, created_at)
+    //   VALUES (${id}, ${email}, "${password}", "${getCurDate()}")`);
+
+    const token = jwt.sign({ id: result[0].id, time: Date.now() }, SECRET_KEY);
+    res.header("auth-token", token).send(token);
   }
 };
 

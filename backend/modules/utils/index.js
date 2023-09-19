@@ -9,4 +9,8 @@ const generateRandomID = (length) => {
   return randomID;
 };
 
-module.exports = { generateRandomID };
+const getCurDate = () => {
+  return new Date().toJSON().slice(0, 19).replace("T", " ");
+};
+
+module.exports = { generateRandomID, getCurDate };
