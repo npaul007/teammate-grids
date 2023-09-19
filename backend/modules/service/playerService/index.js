@@ -85,8 +85,18 @@ const savePlayerDataToDB = async () => {
       }
 
       if (idx === SEASONS.length - 1) {
-        if (players && !fs.existsSync(`${writePath}/test`)) {
-          fs.writeFileSync(`${writePath}/test`, JSON.stringify(players));
+        // if (players && !fs.existsSync(`${writePath}/test`)) {
+        //   fs.writeFileSync(`${writePath}/test`, JSON.stringify(players));
+        // }
+
+        for (playerId in players) {
+          const curPlayer = players[playerId];
+
+          await getQueryResult(`
+          INSERT INTO players (id, first_name, last_name, teams_played)
+          VALUES ("${playerId}", "${curPlayer.first_name}", "${
+            curPlayer.last_name
+          }", '${JSON.stringify(curPlayer.teams_played)}')`);
         }
       }
     });
