@@ -66,18 +66,46 @@ export const gameStyles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 16,
   },
-  gridContainer: {
+  row: {
     flexDirection: "row",
-    flexWrap: "wrap",
+    height: "13%",
   },
   cell: {
     width: "25%",
-    height: "25%",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
   },
+  cellHeader: {
+    width: "25%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    backgroundColor: "#000",
+  },
+  cellCorner: {
+    width: "25%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    backgroundColor: "gray",
+  },
   cellText: {
     fontSize: 16,
+  },
+  cellHeaderText: {
+    fontSize: 16,
+    color: "#fff",
+  },
+});
+
+export const gamebarStyles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    height: "20%",
+    gap: 15,
+  },
+  headerText: {
+    fontWeight: "bold",
   },
 });
