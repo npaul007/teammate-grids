@@ -1,4 +1,4 @@
-import { eq, find, groupBy } from "lodash";
+import { eq, find, groupBy, pick } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -15,8 +15,7 @@ import {
   IPlayer,
   RequestState,
 } from "../modules/constants";
-
-const playerPool = ["Player 1", "Player 2", "Player 3", "Player 4"];
+import { getRandomIndex, getRandomIndexes, mapToArray } from "../modules/utils";
 
 const GameBar = () => {
   return (
@@ -39,41 +38,72 @@ const GameBar = () => {
   );
 };
 
-const FirstRow = () => {
-  return (
-    <View style={gameStyles.row}>
-      <View style={gameStyles.cellCorner}></View>
-      <View style={gameStyles.cellHeader}>
-        <Text style={gameStyles.cellHeaderText}>X0</Text>
-      </View>
-      <View style={gameStyles.cellHeader}>
-        <Text style={gameStyles.cellHeaderText}>X1</Text>
-      </View>
-    </View>
-  );
+const findPlayersWithSameTeams = (players: IPlayer[]) => {
+  const groupedPlayers = new Map();
+
+  players &&
+    players.forEach((player) => {
+      try {
+        const teamsPlayed = JSON.parse(player?.teams_played);
+        teamsPlayed &&
+          teamsPlayed.forEach((team: { team_id: number; season: string }) => {
+            const key = String(team?.team_id) + "-" + team?.season;
+            if (groupedPlayers.get(key) === undefined) {
+              const array = [];
+              array.push(player);
+              groupedPlayers.set(key, array);
+            } else {
+              const current = groupedPlayers.get(key);
+              current.push(player);
+              groupedPlayers.set(key, current);
+            }
+          });
+      } catch (error: any) {}
+    });
+
+  return groupedPlayers;
 };
 
-function findPlayersWithSameTeams(players: IPlayer[]): IPlayer[] | undefined {
-  console.log("players[0]---", players[0]);
-
-  const groupedPlayers = groupBy(players, "teams_played");
-
-  const duplicateTeams = find(groupedPlayers, (group) => group.length > 1);
-
-  console.log("groupedPlayers---", groupedPlayers);
-
-  if (duplicateTeams) {
-    return duplicateTeams;
-  }
-
-  return undefined;
+interface IAxisPlayers {
+  player1: IPlayer | null;
+  player2: IPlayer | null;
+  player3: IPlayer | null;
+  player4: IPlayer | null;
 }
+
+const getAxisPlayers = (groupedPlayers: any[] = []): IAxisPlayers => {
+  const pIdx1 = getRandomIndex(groupedPlayers);
+  const pIdx2 = getRandomIndex(groupedPlayers);
+
+  const playerList1: [] = groupedPlayers[pIdx1];
+  const playerList2: [] = groupedPlayers[pIdx2];
+
+  const p1Idx1 = getRandomIndex(playerList1);
+  const p1Idx2 = getRandomIndex(playerList1);
+  const p2Idx1 = getRandomIndex(playerList2);
+  const p2Idx2 = getRandomIndex(playerList2);
+
+  return {
+    player1: playerList1 ? playerList1[p1Idx1] : null,
+    player2: playerList1 ? playerList1[p1Idx2] : null,
+    player3: playerList2 ? playerList2[p2Idx1] : null,
+    player4: playerList2 ? playerList2[p2Idx2] : null,
+  };
+};
 
 export const Game = () => {
   const [chances, setChances] = useState(9);
   const [tutorialModalOpen, setTutorialModalOpen] = useState(false);
   const [players, setPlayers] = useState<IPlayer[] | []>([]);
-  // const playerX0Y0 =
+
+  const [axisPlayers, setAxisPlayers] = useState<IAxisPlayers>({
+    player1: null,
+    player2: null,
+    player3: null,
+    player4: null,
+  });
+
+  const { player1, player2, player3, player4 } = axisPlayers;
 
   const [playersRequestState, setPlayersRequestState] = useState(
     RequestState.IDLE
@@ -86,12 +116,24 @@ export const Game = () => {
         if (data.players && data.players?.length) {
           const { players } = data;
           setPlayers(players);
+
+          const groupedPlayersMap = findPlayersWithSameTeams(players);
+          const groupedPlayers = mapToArray(groupedPlayersMap);
+          const { player1, player2, player3, player4 } =
+            getAxisPlayers(groupedPlayers);
+          setAxisPlayers({ player1, player2, player3, player4 });
         }
 
         setPlayersRequestState(RequestState.RECEIVED);
       });
     }
-  }, [playersRequestState, fetchPlayers, setPlayers, setPlayersRequestState]);
+  }, [
+    playersRequestState,
+    fetchPlayers,
+    setPlayers,
+    setPlayersRequestState,
+    setAxisPlayers,
+  ]);
 
   return (
     <View style={gameStyles.container}>
@@ -99,10 +141,27 @@ export const Game = () => {
 
       <Text style={gameStyles.header}>Sudoku Board</Text>
 
-      <FirstRow />
+      <View style={gameStyles.row}>
+        <View style={gameStyles.cellCorner}></View>
+        <View style={gameStyles.cellHeader}>
+          <Text style={gameStyles.cellHeaderText}>
+            {" "}
+            {player1?.first_name} {player1?.last_name}
+          </Text>
+        </View>
+        <View style={gameStyles.cellHeader}>
+          <Text style={gameStyles.cellHeaderText}>
+            {" "}
+            {player2?.first_name} {player2?.last_name}
+          </Text>
+        </View>
+      </View>
+
       <View style={gameStyles.row}>
         <View style={gameStyles.cellHeader}>
-          <Text style={gameStyles.cellHeaderText}>Y0</Text>
+          <Text style={gameStyles.cellHeaderText}>
+            {player3?.first_name} {player3?.last_name}
+          </Text>
         </View>
         <TouchableOpacity style={gameStyles.cell}>
           <Text style={gameStyles.cellText}></Text>
@@ -121,7 +180,9 @@ export const Game = () => {
       </View>
       <View style={gameStyles.row}>
         <View style={gameStyles.cellHeader}>
-          <Text style={gameStyles.cellHeaderText}>Y1</Text>
+          <Text style={gameStyles.cellHeaderText}>
+            {player4?.first_name} {player4?.last_name}
+          </Text>
         </View>
         <TouchableOpacity style={gameStyles.cell}>
           <Text style={gameStyles.cellText}></Text>
@@ -141,9 +202,7 @@ export const Game = () => {
 
       <Pressable
         onPress={() => {
-          findPlayersWithSameTeams(players);
-
-          // setTutorialModalOpen(true);
+          setTutorialModalOpen(true);
         }}
       >
         <Text style={gameStyles.instructionsText}>{"\n"}View Instructions</Text>
