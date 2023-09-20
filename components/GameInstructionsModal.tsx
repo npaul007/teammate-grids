@@ -9,7 +9,7 @@ export const GameInstructionsModal = ({
   isVisible: boolean;
   onClose: () => void;
 }) => {
-  const instructions = `Click on a white square and select a Hockey Player that has played with the players listed in the adjacent corners (black background/white text). You have 9 chances to pick correctly. Use your chances wisely!`;
+  const instructions = `Click on a white square and select a Hockey Player that has played with the players listed in the adjacent corners (black background/white text). You have 10 chances to pick correctly. Use your chances wisely! \n\n NHL Players in this game are from seasons 2017 - 2023`;
 
   return (
     <Modal
