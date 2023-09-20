@@ -15,23 +15,19 @@ import {
   IPlayer,
   RequestState,
 } from "../modules/constants";
-import { getRandomIndex, getRandomIndexes, mapToArray } from "../modules/utils";
+import { getRandomIndex, mapToArray } from "../modules/utils";
 
-const GameBar = () => {
+const GameBar = ({ score, chances }: { score: number; chances: number }) => {
   return (
     <View>
       <View style={gamebarStyles.row}>
         <View>
-          <Text style={gamebarStyles.headerText}>Your High Score</Text>
-          <Text>0</Text>
-        </View>
-        <View>
           <Text style={gamebarStyles.headerText}>Score</Text>
-          <Text>0/4</Text>
+          <Text>{score}/4</Text>
         </View>
         <View>
           <Text style={gamebarStyles.headerText}>Chances Left</Text>
-          <Text>10</Text>
+          <Text>{chances}</Text>
         </View>
       </View>
     </View>
@@ -72,27 +68,24 @@ interface IAxisPlayers {
 }
 
 const getAxisPlayers = (groupedPlayers: any[] = []): IAxisPlayers => {
-  const pIdx1 = getRandomIndex(groupedPlayers);
-  const pIdx2 = getRandomIndex(groupedPlayers);
+  const pIdx = getRandomIndex(groupedPlayers);
+  const playerList: [] = groupedPlayers[pIdx];
 
-  const playerList1: [] = groupedPlayers[pIdx1];
-  const playerList2: [] = groupedPlayers[pIdx2];
-
-  const p1Idx1 = getRandomIndex(playerList1);
-  const p1Idx2 = getRandomIndex(playerList1);
-  const p2Idx1 = getRandomIndex(playerList2);
-  const p2Idx2 = getRandomIndex(playerList2);
+  const pIdz1 = getRandomIndex(playerList);
+  const pIdz2 = getRandomIndex(playerList);
+  const pIdz3 = getRandomIndex(playerList);
+  const pIdz4 = getRandomIndex(playerList);
 
   return {
-    player1: playerList1 ? playerList1[p1Idx1] : null,
-    player2: playerList1 ? playerList1[p1Idx2] : null,
-    player3: playerList2 ? playerList2[p2Idx1] : null,
-    player4: playerList2 ? playerList2[p2Idx2] : null,
+    player1: playerList ? playerList[pIdz1] : null,
+    player2: playerList ? playerList[pIdz2] : null,
+    player3: playerList ? playerList[pIdz3] : null,
+    player4: playerList ? playerList[pIdz4] : null,
   };
 };
 
 export const Game = () => {
-  const [chances, setChances] = useState(9);
+  const [chances, setChances] = useState(10);
   const [tutorialModalOpen, setTutorialModalOpen] = useState(false);
   const [players, setPlayers] = useState<IPlayer[] | []>([]);
 
@@ -137,7 +130,7 @@ export const Game = () => {
 
   return (
     <View style={gameStyles.container}>
-      <GameBar />
+      <GameBar chances={chances} score={0} />
 
       <Text style={gameStyles.header}>Sudoku Board</Text>
 
