@@ -7,7 +7,12 @@ import {
   Pressable,
 } from "react-native";
 import { GameInstructionsModal } from "../components";
-import { gamebarStyles, gameStyles } from "../modules/constants";
+import {
+  gamebarStyles,
+  gameStyles,
+  IPlayer,
+  RequestState,
+} from "../modules/constants";
 
 const playerPool = ["Player 1", "Player 2", "Player 3", "Player 4"];
 
@@ -47,7 +52,13 @@ const FirstRow = () => {
 };
 
 export const Game = () => {
+  const [chances, setChances] = useState(9);
   const [tutorialModalOpen, setTutorialModalOpen] = useState(false);
+  const [players, setPlayers] = useState<IPlayer[] | []>([]);
+  const [playersRequestState, setPlayersRequestState] = useState(
+    RequestState.IDLE
+  );
+
   return (
     <View style={gameStyles.container}>
       <GameBar />

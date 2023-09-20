@@ -3,3 +3,9 @@ export enum Screens {
   REGISTER = "Register",
   GAME = "Game",
 }
+
+export enum RequestState {
+  IDLE,
+  REQUESTED,
+  RECEIVED,
+}
