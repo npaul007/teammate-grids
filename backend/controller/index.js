@@ -64,7 +64,7 @@ const getPlayersRoute = (req, res) => {
     const result = await getQueryResult(`SELECT * FROM players`);
 
     if (result) {
-      res.send(result);
+      res.send({ players: result });
     } else {
       return res.send([]);
     }

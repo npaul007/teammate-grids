@@ -59,3 +59,19 @@ export const register = (
       callback(null);
     });
 };
+
+export const fetchPlayers = async (callback: (data: any) => void) => {
+  const headers = await getAuthHeaders();
+  axios
+    .get(`${API_HOST}players`, {
+      headers: headers,
+    })
+    .then((response) => {
+      const { data } = response;
+      callback(data);
+    })
+    .catch((error) => {
+      console.log("Failed to make request due to error:", error);
+      callback(null);
+    });
+};

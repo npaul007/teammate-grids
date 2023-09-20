@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { eq, find, groupBy } from "lodash";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { GameInstructionsModal } from "../components";
+import { fetchPlayers } from "../modules/api";
 import {
   gamebarStyles,
   gameStyles,
@@ -51,13 +53,45 @@ const FirstRow = () => {
   );
 };
 
+function findPlayersWithSameTeams(players: IPlayer[]): IPlayer[] | undefined {
+  console.log("players[0]---", players[0]);
+
+  const groupedPlayers = groupBy(players, "teams_played");
+
+  const duplicateTeams = find(groupedPlayers, (group) => group.length > 1);
+
+  console.log("groupedPlayers---", groupedPlayers);
+
+  if (duplicateTeams) {
+    return duplicateTeams;
+  }
+
+  return undefined;
+}
+
 export const Game = () => {
   const [chances, setChances] = useState(9);
   const [tutorialModalOpen, setTutorialModalOpen] = useState(false);
   const [players, setPlayers] = useState<IPlayer[] | []>([]);
+  // const playerX0Y0 =
+
   const [playersRequestState, setPlayersRequestState] = useState(
     RequestState.IDLE
   );
+
+  useEffect(() => {
+    if (eq(RequestState.IDLE, playersRequestState)) {
+      setPlayersRequestState(RequestState.REQUESTED);
+      fetchPlayers((data) => {
+        if (data.players && data.players?.length) {
+          const { players } = data;
+          setPlayers(players);
+        }
+
+        setPlayersRequestState(RequestState.RECEIVED);
+      });
+    }
+  }, [playersRequestState, fetchPlayers, setPlayers, setPlayersRequestState]);
 
   return (
     <View style={gameStyles.container}>
@@ -105,7 +139,13 @@ export const Game = () => {
         </TouchableOpacity>
       </View>
 
-      <Pressable onPress={() => setTutorialModalOpen(true)}>
+      <Pressable
+        onPress={() => {
+          findPlayersWithSameTeams(players);
+
+          // setTutorialModalOpen(true);
+        }}
+      >
         <Text style={gameStyles.instructionsText}>{"\n"}View Instructions</Text>
       </Pressable>
 

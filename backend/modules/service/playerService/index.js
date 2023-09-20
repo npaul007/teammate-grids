@@ -53,18 +53,24 @@ const formatPlayerData = (json, data, season) => {
           id: player?.person?.id,
           first_name: nameArr[0],
           last_name: nameArr[1],
-          teams_played: {
-            [team?.id]: {
+          teams_played: [
+            {
               team_id: team?.id,
               season: season,
             },
-          },
+          ],
         };
       } else {
-        data[player?.person?.id].teams_played[team?.id] = {
+        if (
+          !data[player?.person?.id].teams_played.find(
+            (team) => team.team_id == team?.id
+          )
+        ) {
+        }
+        data[player?.person?.id].teams_played.push({
           team_id: team?.id,
           season: season,
-        };
+        });
       }
     });
   });
