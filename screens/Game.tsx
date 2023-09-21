@@ -1,4 +1,4 @@
-import { eq, find, groupBy, pick } from "lodash";
+import { eq, find, groupBy, pick, some } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
@@ -8,6 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { GameInstructionsModal } from "../components";
+import AlertModal from "../components/AlertModal";
 import PlayerModal from "../components/PlayerModal";
 import { fetchPlayers } from "../modules/api";
 import {
@@ -98,7 +99,9 @@ const getAxisPlayers = (groupedPlayers: any[] = []): IAxisPlayers => {
 };
 
 export const Game = () => {
-  const [chances, setChances] = useState(10);
+  const MAX_CHANCES = 10;
+
+  const [chances, setChances] = useState(MAX_CHANCES);
   const [tutorialModalOpen, setTutorialModalOpen] = useState(false);
   const [playerSelectModalOpen, setPlayerSelectModalOpen] = useState(false);
 
@@ -127,7 +130,8 @@ export const Game = () => {
     selPlayer4,
   ]);
 
-  const GAME_WON = eq(score, 4);
+  const gameWon = eq(score, 4);
+  const gameLost = eq(chances, 0);
 
   const [playersToCompare, setPlayersToCompare] = useState<IComparePlayers>({
     player1: null,
@@ -175,6 +179,11 @@ export const Game = () => {
     },
     [playersToCompare]
   );
+
+  const resetGame = useCallback(() => {
+    setChances(MAX_CHANCES);
+    setSelectedPlayers(new Map<string, IPlayer>());
+  }, [MAX_CHANCES, setChances, setSelectedPlayers]);
 
   return (
     <View style={gameStyles.container}>
@@ -303,6 +312,12 @@ export const Game = () => {
         onCloseModal={() => {
           setPlayerSelectModalOpen(false);
         }}
+      />
+      <AlertModal
+        gameLost={gameLost}
+        gameWon={gameWon}
+        visible={some([gameWon, gameLost])}
+        onPressButton={resetGame}
       />
     </View>
   );

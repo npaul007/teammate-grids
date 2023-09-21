@@ -56,14 +56,13 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
       const list2: ITeamsPlayed[] = JSON.parse(teamsPlayed2);
       const list: ITeamsPlayed[] = JSON.parse(teamsPlayed);
 
-      if (playerToSet && player) {
-        onPlayerSelected(playerToSet, player);
+      if (hasCommonItem(list, list1, list2)) {
+        if (playerToSet && player) {
+          onPlayerSelected(playerToSet, player);
+        }
+      } else {
+        setChances(chances - 1);
       }
-      //   if (hasCommonItem(list, list1, list2)) {
-      //   } else {
-
-      //     setChances(chances - 1);
-      //   }
 
       onCloseModal();
     },

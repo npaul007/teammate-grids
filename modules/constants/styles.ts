@@ -130,6 +130,7 @@ export const modalStyles = StyleSheet.create({
     alignItems: "center",
     elevation: 5,
     width: "100%",
+    minHeight: 200,
   },
   modalTitle: {
     fontSize: 20,
