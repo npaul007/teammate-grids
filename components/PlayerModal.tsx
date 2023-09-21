@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { eq, every, get } from "lodash";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,6 +10,7 @@ import {
   Pressable,
 } from "react-native";
 import { IComparePlayers, IPlayer, modalStyles } from "../modules/constants";
+import { hasCommonItem } from "../modules/utils";
 
 interface PlayerModalProps {
   isVisible: boolean;
@@ -20,10 +22,17 @@ interface PlayerModalProps {
   onCloseModal: () => void;
 }
 
+interface ITeamsPlayed {
+  team_id: number;
+  season: string;
+}
+
 const PlayerModal: React.FC<PlayerModalProps> = ({
   isVisible,
   players,
+  playersToCompare,
   chances,
+  setChances,
   onPlayerSelected,
   onCloseModal,
 }) => {
@@ -40,9 +49,23 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
     setSearchText("");
   }, [isVisible]);
 
-  const handlePlayerSelection = (player: IPlayer) => {
-    setSelectedPlayer(player);
-  };
+  const handlePlayerSelection = useCallback(
+    (player: IPlayer) => {
+      const { player1, player2 } = playersToCompare;
+      const teamsPlayed1 = get(player1, "teams_played", "[]");
+      const teamsPlayed2 = get(player2, "teams_played", "[]");
+      const teamsPlayed = get(player, "teams_played", "[]");
+      const list1: ITeamsPlayed[] = JSON.parse(teamsPlayed1);
+      const list2: ITeamsPlayed[] = JSON.parse(teamsPlayed2);
+      const list: ITeamsPlayed[] = JSON.parse(teamsPlayed);
+
+      if (hasCommonItem(list, list1, list2)) {
+      } else {
+        setChances(chances - 1);
+      }
+    },
+    [playersToCompare, chances, setChances]
+  );
 
   const handleSubmit = () => {
     if (selectedPlayer) {
@@ -55,7 +78,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
       <View style={modalStyles.modalContainer}>
         <View style={modalStyles.modalContent}>
           <TextInput
-            placeholder="Search for a player..."
+            placeholder="Search for a player...Click one to choose..."
             onChangeText={(text) => setSearchText(text)}
             value={String(searchText)}
           />

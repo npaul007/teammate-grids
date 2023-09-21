@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { includes, some } from "lodash";
 import { IPlayer } from "../constants";
 
 export const setAuthCookie = async (token: string) => {
@@ -22,4 +23,8 @@ export const getRandomIndex = (array: any[] | undefined): number => {
 
   const randomIndex = Math.floor(Math.random() * array.length);
   return randomIndex;
+};
+
+export const hasCommonItem = (arr1: any[], arr2: any[], arr3: any[]) => {
+  return some(arr1, (item) => includes(arr2, item) && includes(arr3, item));
 };
