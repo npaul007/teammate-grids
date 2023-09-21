@@ -15,6 +15,7 @@ interface PlayerModalProps {
   players: IPlayer[] | [];
   playersToCompare: IComparePlayers;
   chances: number;
+  setChances: (newChances: number) => void;
   onPlayerSelected: (selectedPlayer: IPlayer) => void;
   onCloseModal: () => void;
 }
@@ -28,6 +29,11 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
 }) => {
   const [searchText, setSearchText] = useState("");
   const [selectedPlayer, setSelectedPlayer] = useState<IPlayer | null>(null);
+
+  const filteredPlayers = players.filter((player) => {
+    const fullName = player.first_name + " " + player.last_name;
+    return fullName.toLowerCase().includes(searchText.toLowerCase());
+  });
 
   useEffect(() => {
     setSelectedPlayer(null);
@@ -54,15 +60,15 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
             value={String(searchText)}
           />
           <ScrollView style={{ maxHeight: 200, width: "100%" }}>
-            <View style={{ marginVertical: 20 }}>
-              {players
-                .filter((player) => {
-                  const fullName = player.first_name + " " + player.last_name;
-                  return fullName
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase());
-                })
-                .map((player, index) => (
+            <View
+              style={{
+                marginVertical: 20,
+                justifyContent: "center",
+                alignItems: !filteredPlayers.length ? "center" : "left",
+              }}
+            >
+              {filteredPlayers.length ? (
+                filteredPlayers.map((player, index) => (
                   <Pressable
                     key={index}
                     onPress={() => handlePlayerSelection(player)}
@@ -70,9 +76,16 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
                   >
                     <Text>{player.first_name + " " + player.last_name}</Text>
                   </Pressable>
-                ))}
+                ))
+              ) : (
+                <Text>No Players Found</Text>
+              )}
             </View>
           </ScrollView>
+          <Text>{"\n"}</Text>
+          <Text style={{ color: "green", fontSize: 20, fontWeight: "bold" }}>
+            Chances Left: {chances}
+          </Text>
           <Text>{"\n"}</Text>
           <Button title="Close" onPress={onCloseModal} />
         </View>

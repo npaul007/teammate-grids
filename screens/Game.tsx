@@ -252,6 +252,7 @@ export const Game = () => {
         isVisible={playerSelectModalOpen}
         players={players}
         chances={chances}
+        setChances={(newChances: number) => setChances(newChances)}
         playersToCompare={playersToCompare}
         onPlayerSelected={() => {}}
         onCloseModal={() => {
