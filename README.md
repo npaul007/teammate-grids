@@ -1,4 +1,4 @@
-# ReadMe - Setting Up and Running the App
+# Setting Up and Running the App
 
 This guide will help you configure and run the app. Before proceeding, make sure you have NodeJS and Expo installed on your machine.
 
@@ -75,4 +75,4 @@ To run the app on your mobile device, follow these steps:
 
 5. **Run the App**: The app should now run on your mobile device.
 
-Enjoy using the app! If you encounter any issues or have questions, please refer to the documentation or seek assistance from the project maintainers.
+Enjoy using the app! If you encounter any issues or have questions, please refer to the documentation or message me!
