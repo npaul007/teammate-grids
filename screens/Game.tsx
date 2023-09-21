@@ -13,6 +13,7 @@ import { fetchPlayers } from "../modules/api";
 import {
   gamebarStyles,
   gameStyles,
+  IComparePlayers,
   IPlayer,
   RequestState,
 } from "../modules/constants";
@@ -68,6 +69,13 @@ interface IAxisPlayers {
   player4: IPlayer | null;
 }
 
+interface ISelectedPlayers {
+  playerX0Y0: IPlayer | null;
+  playerX1Y0: IPlayer | null;
+  playerX0Y1: IPlayer | null;
+  playerX1Y1: IPlayer | null;
+}
+
 const getAxisPlayers = (groupedPlayers: any[] = []): IAxisPlayers => {
   const pIdx = getRandomIndex(groupedPlayers);
   const playerList: [] = groupedPlayers[pIdx];
@@ -99,11 +107,16 @@ export const Game = () => {
     player4: null,
   });
 
-  const [selectedPlayers, setSelectedPlayers] = useState({
+  const [selectedPlayers, setSelectedPlayers] = useState<ISelectedPlayers>({
     playerX0Y0: null,
     playerX1Y0: null,
     playerX0Y1: null,
     playerX1Y1: null,
+  });
+
+  const [playersToCompare, setPlayersToCompare] = useState<IComparePlayers>({
+    player1: null,
+    player2: null,
   });
 
   const { player1, player2, player3, player4 } = axisPlayers;
@@ -168,13 +181,25 @@ export const Game = () => {
         </View>
         <TouchableOpacity
           style={gameStyles.cell}
-          onPress={() => setPlayerSelectModalOpen(true)}
+          onPress={() => {
+            setPlayersToCompare({
+              player1: player1,
+              player2: player3,
+            });
+            setPlayerSelectModalOpen(true);
+          }}
         >
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={gameStyles.cell}
-          onPress={() => setPlayerSelectModalOpen(true)}
+          onPress={() => {
+            setPlayersToCompare({
+              player1: player2,
+              player2: player3,
+            });
+            setPlayerSelectModalOpen(true);
+          }}
         >
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
@@ -187,13 +212,25 @@ export const Game = () => {
         </View>
         <TouchableOpacity
           style={gameStyles.cell}
-          onPress={() => setPlayerSelectModalOpen(true)}
+          onPress={() => {
+            setPlayersToCompare({
+              player1: player1,
+              player2: player4,
+            });
+            setPlayerSelectModalOpen(true);
+          }}
         >
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={gameStyles.cell}
-          onPress={() => setPlayerSelectModalOpen(true)}
+          onPress={() => {
+            setPlayersToCompare({
+              player1: player2,
+              player2: player4,
+            });
+            setPlayerSelectModalOpen(true);
+          }}
         >
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
@@ -215,6 +252,7 @@ export const Game = () => {
         isVisible={playerSelectModalOpen}
         players={players}
         chances={chances}
+        playersToCompare={playersToCompare}
         onPlayerSelected={() => {}}
         onCloseModal={() => {
           setPlayerSelectModalOpen(false);

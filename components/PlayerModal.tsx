@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Modal, Button, TextInput } from "react-native";
-import { IPlayer, modalStyles } from "../modules/constants";
+import {
+  View,
+  Text,
+  Modal,
+  Button,
+  TextInput,
+  ScrollView,
+  Pressable,
+} from "react-native";
+import { IComparePlayers, IPlayer, modalStyles } from "../modules/constants";
 
 interface PlayerModalProps {
   isVisible: boolean;
   players: IPlayer[] | [];
+  playersToCompare: IComparePlayers;
   chances: number;
   onPlayerSelected: (selectedPlayer: IPlayer) => void;
   onCloseModal: () => void;
@@ -44,22 +53,27 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
             onChangeText={(text) => setSearchText(text)}
             value={String(searchText)}
           />
-          <View style={{ marginVertical: 20 }}>
-            {players
-              .filter(
-                (player) =>
-                  searchText.toLowerCase().includes(player.first_name) ||
-                  searchText.toLowerCase().includes(player.last_name)
-              )
-              .map((player, index) => (
-                <Button
-                  key={index}
-                  title={player.first_name + " " + player.last_name}
-                  onPress={() => handlePlayerSelection(player)}
-                />
-              ))}
-          </View>
-
+          <ScrollView style={{ maxHeight: 200, width: "100%" }}>
+            <View style={{ marginVertical: 20 }}>
+              {players
+                .filter((player) => {
+                  const fullName = player.first_name + " " + player.last_name;
+                  return fullName
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase());
+                })
+                .map((player, index) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => handlePlayerSelection(player)}
+                    style={{ backgroundColor: "#ccc", margin: 2, padding: 5 }}
+                  >
+                    <Text>{player.first_name + " " + player.last_name}</Text>
+                  </Pressable>
+                ))}
+            </View>
+          </ScrollView>
+          <Text>{"\n"}</Text>
           <Button title="Close" onPress={onCloseModal} />
         </View>
       </View>

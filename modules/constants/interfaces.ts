@@ -4,3 +4,8 @@ export interface IPlayer {
   last_name: string;
   teams_played: string;
 }
+
+export interface IComparePlayers {
+  player1: IPlayer | null;
+  player2: IPlayer | null;
+}
