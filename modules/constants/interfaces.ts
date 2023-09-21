@@ -8,4 +8,5 @@ export interface IPlayer {
 export interface IComparePlayers {
   player1: IPlayer | null;
   player2: IPlayer | null;
+  playerToSet: string | null;
 }

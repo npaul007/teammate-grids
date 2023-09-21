@@ -18,7 +18,7 @@ interface PlayerModalProps {
   playersToCompare: IComparePlayers;
   chances: number;
   setChances: (newChances: number) => void;
-  onPlayerSelected: (selectedPlayer: IPlayer) => void;
+  onPlayerSelected: (playerToSet: string, player: IPlayer) => void;
   onCloseModal: () => void;
 }
 
@@ -37,21 +37,18 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
   onCloseModal,
 }) => {
   const [searchText, setSearchText] = useState("");
-  const [selectedPlayer, setSelectedPlayer] = useState<IPlayer | null>(null);
-
   const filteredPlayers = players.filter((player) => {
     const fullName = player.first_name + " " + player.last_name;
     return fullName.toLowerCase().includes(searchText.toLowerCase());
   });
 
   useEffect(() => {
-    setSelectedPlayer(null);
     setSearchText("");
   }, [isVisible]);
 
   const handlePlayerSelection = useCallback(
     (player: IPlayer) => {
-      const { player1, player2 } = playersToCompare;
+      const { player1, player2, playerToSet } = playersToCompare;
       const teamsPlayed1 = get(player1, "teams_played", "[]");
       const teamsPlayed2 = get(player2, "teams_played", "[]");
       const teamsPlayed = get(player, "teams_played", "[]");
@@ -59,19 +56,19 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
       const list2: ITeamsPlayed[] = JSON.parse(teamsPlayed2);
       const list: ITeamsPlayed[] = JSON.parse(teamsPlayed);
 
-      if (hasCommonItem(list, list1, list2)) {
-      } else {
-        setChances(chances - 1);
+      if (playerToSet && player) {
+        onPlayerSelected(playerToSet, player);
       }
-    },
-    [playersToCompare, chances, setChances]
-  );
+      //   if (hasCommonItem(list, list1, list2)) {
+      //   } else {
 
-  const handleSubmit = () => {
-    if (selectedPlayer) {
-      //   onPlayerSelected(selectedPlayer);
-    }
-  };
+      //     setChances(chances - 1);
+      //   }
+
+      onCloseModal();
+    },
+    [playersToCompare, chances, setChances, onCloseModal]
+  );
 
   return (
     <Modal visible={isVisible} transparent={true} animationType="slide">
