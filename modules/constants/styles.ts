@@ -129,6 +129,7 @@ export const modalStyles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     elevation: 5,
+    width: "100%",
   },
   modalTitle: {
     fontSize: 20,

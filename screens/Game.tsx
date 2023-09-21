@@ -8,6 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { GameInstructionsModal } from "../components";
+import PlayerModal from "../components/PlayerModal";
 import { fetchPlayers } from "../modules/api";
 import {
   gamebarStyles,
@@ -87,6 +88,8 @@ const getAxisPlayers = (groupedPlayers: any[] = []): IAxisPlayers => {
 export const Game = () => {
   const [chances, setChances] = useState(10);
   const [tutorialModalOpen, setTutorialModalOpen] = useState(false);
+  const [playerSelectModalOpen, setPlayerSelectModalOpen] = useState(false);
+
   const [players, setPlayers] = useState<IPlayer[] | []>([]);
 
   const [axisPlayers, setAxisPlayers] = useState<IAxisPlayers>({
@@ -94,6 +97,13 @@ export const Game = () => {
     player2: null,
     player3: null,
     player4: null,
+  });
+
+  const [selectedPlayers, setSelectedPlayers] = useState({
+    playerX0Y0: null,
+    playerX1Y0: null,
+    playerX0Y1: null,
+    playerX1Y1: null,
   });
 
   const { player1, player2, player3, player4 } = axisPlayers;
@@ -156,17 +166,15 @@ export const Game = () => {
             {player3?.first_name} {player3?.last_name}
           </Text>
         </View>
-        <TouchableOpacity style={gameStyles.cell}>
+        <TouchableOpacity
+          style={gameStyles.cell}
+          onPress={() => setPlayerSelectModalOpen(true)}
+        >
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={gameStyles.cell}
-          // onPress={() =>
-          //   handlePlayerSelection(
-          //     index,
-          //     player === null ? playerPool[0] : null
-          //   )
-          // }
+          onPress={() => setPlayerSelectModalOpen(true)}
         >
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
@@ -177,17 +185,15 @@ export const Game = () => {
             {player4?.first_name} {player4?.last_name}
           </Text>
         </View>
-        <TouchableOpacity style={gameStyles.cell}>
+        <TouchableOpacity
+          style={gameStyles.cell}
+          onPress={() => setPlayerSelectModalOpen(true)}
+        >
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={gameStyles.cell}
-          // onPress={() =>
-          //   handlePlayerSelection(
-          //     index,
-          //     player === null ? playerPool[0] : null
-          //   )
-          // }
+          onPress={() => setPlayerSelectModalOpen(true)}
         >
           <Text style={gameStyles.cellText}></Text>
         </TouchableOpacity>
@@ -204,6 +210,15 @@ export const Game = () => {
       <GameInstructionsModal
         isVisible={tutorialModalOpen}
         onClose={() => setTutorialModalOpen(false)}
+      />
+      <PlayerModal
+        isVisible={playerSelectModalOpen}
+        players={players}
+        chances={chances}
+        onPlayerSelected={() => {}}
+        onCloseModal={() => {
+          setPlayerSelectModalOpen(false);
+        }}
       />
     </View>
   );
