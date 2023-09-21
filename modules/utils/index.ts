@@ -28,3 +28,6 @@ export const getRandomIndex = (array: any[] | undefined): number => {
 export const hasCommonItem = (arr1: any[], arr2: any[], arr3: any[]) => {
   return some(arr1, (item) => includes(arr2, item) && includes(arr3, item));
 };
+
+export const countNonNullItems = (arr: (any | null)[]): number =>
+  arr.filter((item) => item !== null).length;

@@ -17,7 +17,11 @@ import {
   IPlayer,
   RequestState,
 } from "../modules/constants";
-import { getRandomIndex, mapToArray } from "../modules/utils";
+import {
+  countNonNullItems,
+  getRandomIndex,
+  mapToArray,
+} from "../modules/utils";
 
 const GameBar = ({ score, chances }: { score: number; chances: number }) => {
   return (
@@ -116,6 +120,15 @@ export const Game = () => {
   const selPlayer3 = selectedPlayers.get("three") ?? null;
   const selPlayer4 = selectedPlayers.get("four") ?? null;
 
+  const score = countNonNullItems([
+    selPlayer1,
+    selPlayer2,
+    selPlayer3,
+    selPlayer4,
+  ]);
+
+  const GAME_WON = eq(score, 4);
+
   const [playersToCompare, setPlayersToCompare] = useState<IComparePlayers>({
     player1: null,
     player2: null,
@@ -165,7 +178,7 @@ export const Game = () => {
 
   return (
     <View style={gameStyles.container}>
-      <GameBar chances={chances} score={0} />
+      <GameBar chances={chances} score={score} />
 
       <Text style={gameStyles.header}>Sudoku Board</Text>
 
